@@ -1,0 +1,8 @@
+- The available examples are based on platformio platform since the best way to use this library is by using local files/library
+- Depending if its compiling a Slave code or master code it has to be different parameters
+
+- To change between Slave or Master you have to go into the cansart_db.h file and change the variable SLAVE_MODE:
+
+- #define SLAVEMODE 1		-----> for Slave mode
+- #define SLAVEMODE 0		-----> for Master mode
+ 

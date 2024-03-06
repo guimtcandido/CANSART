@@ -1,0 +1,10 @@
+This library to work on STM32 cores needs some peripherals to be programmed:
+
+- Set normally the usart that you want to use;
+- Set DMA in normal mode, memory and byte;
+- On generation tools allow it to generate .c/.h files;
+- setup int _write() function so it will allow you to use printf on you project and it will enable the library.
+- Guarantee that in the 
+
+Doing this setup the library automatically handles what it needs to handle to work nicely.
+
