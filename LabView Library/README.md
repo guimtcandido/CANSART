@@ -8,3 +8,7 @@ The Example is how you will have to set your project.
 Best way to use:
 
 1º - Create a copy of the Example, and make your application on the EXAMPLE APPLICATION, so you won't need to deal with much configuration, since the example is most of it.
+
+NOTES:
+
+- Make sure the database is similar to the database on the example. LabView needs the DB to be initializers, specifically on ID!
