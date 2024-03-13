@@ -10,7 +10,7 @@ SoftwareSerial mySerial(11, 10); // RX, TX
 HardwareSerial &serialPort = Serial;
 
 frame10 frames10;
-frame23 frames23;
+//frame23 frames23;
 frame121 frames121;
 
 uint8_t tx_ID = 25;
@@ -51,14 +51,14 @@ void loop()
   {
     frames10.SPEED = 0;
   }
-  if (frames23.TEMP > 250)
-  {
-    frames23.TEMP = 0;
-  }
-  if (frames23.OIL > 250)
-  {
-    frames23.OIL = 0;
-  }
+ //if (frames23.TEMP > 250)
+ //{
+ //  frames23.TEMP = 0;
+ //}
+ //if (frames23.OIL > 250)
+ //{
+ //  frames23.OIL = 0;
+ //}
   if (frames121.SetPower > 250)
   {
     frames121.SetPower = 0;
@@ -75,8 +75,8 @@ void loop()
     frames121.SetPower++;
     frames10.RPM++;
     frames10.SPEED++;
-    frames23.TEMP++;
-    frames23.OIL++;
+   // frames23.TEMP++;
+    //frames23.OIL++;
     mySerial.print("setRPM: ");
     mySerial.print(frames121.SetRPM);
     mySerial.print("  setPWR: ");
@@ -85,10 +85,10 @@ void loop()
     mySerial.print(frames10.RPM);
     mySerial.print("  SPEED: ");
     mySerial.print(frames10.SPEED);
-    mySerial.print("  TEMP: ");
-    mySerial.print(frames23.TEMP);
-    mySerial.print("  OIL: ");
-    mySerial.print(frames23.OIL);
+    //mySerial.print("  TEMP: ");
+   // mySerial.print(frames23.TEMP);
+   // mySerial.print("  OIL: ");
+   // mySerial.print(frames23.OIL);
     mySerial.println(" ");
 
     oldMillis = millis();
@@ -101,5 +101,5 @@ void cansartTasks()
 {
   updateDB(&frames121);
   updateDB(&frames10);
-  updateDB(&frames23);
+ // updateDB(&frames23);
 }
