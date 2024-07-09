@@ -1,7 +1,7 @@
 #ifndef CANSART_DB_H
 #define CANSART_DB_H
 
-#include "cansart.h"
+#include "stdint.h"
 
 /**
  * @brief Define the MCU type

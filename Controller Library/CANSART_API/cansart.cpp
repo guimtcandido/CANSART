@@ -1,156 +1,185 @@
 #include "cansart.h"
 
-static uint8_t tx_ID;
-static uint8_t tx_LENGHT;
-static uint8_t tx_DATA[8];
-static uint16_t tx_CHECKSUM;
+#if !SLAVEMODE
+static uint8_t BUS_Available_A = 1;
+static uint8_t temp_ID_C = 0;
+#endif
 
-static char rx_DATA_RAW[48];
-static uint8_t rx_COUNTER = 0;
-static uint8_t rx_ID = 0;
-static uint8_t rx_LENGHT = 0;
-static uint8_t rx_DATA[8];
-static uint16_t rx_CHECKSUM = 0;
+static uint8_t BUS_Available_B = 1;
+static uint8_t rx_buffer[8];
+static uint8_t temp_ID_B = 0;
 
-static uint16_t checksum = 0;
 
-uint8_t transmitMessage(uint8_t ID, uint8_t *txmessageBuffer, uint8_t messageLength)
-{
-  tx_ID = ID;
-  tx_LENGHT = messageLength;
+static uint8_t tx_verify_buffer[8];
 
-  for (int i = 0; i < messageLength; i++)
-  {
-    tx_DATA[i] = txmessageBuffer[i];
-  }
+uint8_t startupDB = 1;
 
-  tx_checksum_calculator();
-
-  sendData(tx_ID);
-
-  sendData(tx_LENGHT);
-
-  for (int i = 0; i < tx_LENGHT; i++)
-  {
-    sendData(tx_DATA[i]);
-  }
-
-  sendData(tx_CHECKSUM);
-  sendFinishData();
-  return 0;
-}
-
-void tx_checksum_calculator()
-{
-  tx_CHECKSUM = tx_ID + tx_LENGHT;
-
-  for (int i = 0; i < tx_LENGHT; i++)
-  {
-    tx_CHECKSUM += tx_DATA[i];
-  }
-}
-
-uint8_t availableMessage(uint8_t *rxmessageBuffer)
+uint8_t updateDB(void *source)
 {
 
-  if (receiveUSART(rx_DATA_RAW))
-  {
+    struct framesT dest;
+    memcpy(&dest, source, sizeof(dest));
 
-    if (convertData(rx_DATA_RAW))
+    uint8_t temp_ID_A = availableMessage(rx_buffer);
+    if (temp_ID_A >= 10 && temp_ID_A <= 240)
     {
-
-      if (rx_checksum_calculator() && rx_ID >= 10)
-      {
-        memcpy(rxmessageBuffer, rx_DATA, 8 * sizeof(uint8_t));
-        return rx_ID;
-      }
-      else
-      {
-        rx_ID = 2;
-      }
-    }
-    return 1;
-  }
-  return 0;
-}
-
-uint8_t rx_checksum_calculator()
-{
-  uint8_t temp_rx_LENGHT = rx_LENGHT;
-
-  checksum = rx_ID + temp_rx_LENGHT;
-
-  for (int i = 0; i < temp_rx_LENGHT; i++)
-  {
-    checksum += rx_DATA[i];
-  }
-
-  if (checksum == rx_CHECKSUM)
-  {
-    checksum = 0;
-    return 1;
-  }
-  return temp_rx_LENGHT;
-}
-
-uint8_t convertData(char *receivedData)
-{
-
-  int numbersIndex = 0;
-  int startIndex = 0;
-  uint8_t flagControl = 0;
-  uint8_t i = 0;
-
-  while (receivedData[i] != '\n')
-  {
-
-    if (receivedData[i] == '\0')
-    {
-
-      if (startIndex == 0)
-      {
-        rx_ID = atoi(((char *)&receivedData[startIndex]));
-        flagControl = 1;
-      }
-      else if (flagControl == 1)
-      {
-        rx_LENGHT = atoi((char *)&receivedData[startIndex]);
-        flagControl = 0;
-      }
-      else if (numbersIndex < rx_LENGHT)
-      {
-        rx_DATA[numbersIndex++] = atoi((char *)&receivedData[startIndex]);
-      }
-      else
-      {
-        rx_CHECKSUM = atoi((char *)&receivedData[startIndex]);
-      }
-      startIndex = i + 1;
-    }
-    i++;
-  }
-
-  return 1;
-}
-
-uint8_t receiveUSART(char *buffer)
-{
-  if (newData() > 0)
-  {
-
-    buffer[rx_COUNTER] = getData();
-
-    if (buffer[rx_COUNTER] == '\n')
-    {
-      rx_COUNTER = 0;
-      return 1;
+        temp_ID_B = temp_ID_A;
     }
 
-    rx_COUNTER++;
+#if !SLAVEMODE
+    if (temp_ID_B == dest.ID && !BUS_Available_A)
+#else
+    if (temp_ID_B == dest.ID)
+#endif
+    {
+#if !SLAVEMODE
 
-  }
-  return 0;
+        dest.DATA1 = rx_buffer[0];
+        dest.DATA2 = rx_buffer[1];
+        dest.DATA3 = rx_buffer[2];
+        dest.DATA4 = rx_buffer[3];
+        dest.DATA5 = rx_buffer[4];
+        dest.DATA6 = rx_buffer[5];
+        dest.DATA7 = rx_buffer[6];
+        dest.DATA8 = rx_buffer[7];
+        if (dest.ID >= 121 && dest.ID <= 140)
+        {
+            if (dest.DATA1 == tx_verify_buffer[0] && dest.DATA2 == tx_verify_buffer[1] && dest.DATA3 == tx_verify_buffer[2] && dest.DATA4 == tx_verify_buffer[3] && dest.DATA5 == tx_verify_buffer[4] && dest.DATA6 == tx_verify_buffer[5] && dest.DATA7 == tx_verify_buffer[6] && dest.DATA8 == 0)
+            {
+                temp_ID_C = 0;
+
+                BUS_Available_B = 1;
+            }
+        }
+        memcpy(source, &dest, sizeof(dest));
+        BUS_Available_A = 1;
+        temp_ID_B = 0;
+        return 1;
+#else
+        if (temp_ID_B <= 120)
+        {
+
+            uint8_t temp_tx_buffer[8];
+            temp_tx_buffer[0] = dest.DATA1;
+            temp_tx_buffer[1] = dest.DATA2;
+            temp_tx_buffer[2] = dest.DATA3;
+            temp_tx_buffer[3] = dest.DATA4;
+            temp_tx_buffer[4] = dest.DATA5;
+            temp_tx_buffer[5] = dest.DATA6;
+            temp_tx_buffer[6] = dest.DATA7;
+            temp_tx_buffer[7] = dest.DATA8;
+
+            transmitMessage(dest.ID, temp_tx_buffer, dest.LENGHT);
+            temp_ID_B = 0;
+        }
+        else
+        {
+            if (!startupDB)
+            {
+                if (rx_buffer[7] == 1)
+                {
+                    dest.DATA1 = rx_buffer[0];
+                    dest.DATA2 = rx_buffer[1];
+                    dest.DATA3 = rx_buffer[2];
+                    dest.DATA4 = rx_buffer[3];
+                    dest.DATA5 = rx_buffer[4];
+                    dest.DATA6 = rx_buffer[5];
+                    dest.DATA7 = rx_buffer[6];
+                    dest.DATA8 = 0;
+                    rx_buffer[7] = 0;
+                    memcpy(source, &dest, sizeof(dest));
+                    transmitMessage(dest.ID, rx_buffer, dest.LENGHT);
+                }
+                else
+                {
+                    uint8_t temp_tx_buffer[8];
+                    temp_tx_buffer[0] = dest.DATA1;
+                    temp_tx_buffer[1] = dest.DATA2;
+                    temp_tx_buffer[2] = dest.DATA3;
+                    temp_tx_buffer[3] = dest.DATA4;
+                    temp_tx_buffer[4] = dest.DATA5;
+                    temp_tx_buffer[5] = dest.DATA6;
+                    temp_tx_buffer[6] = dest.DATA7;
+                    temp_tx_buffer[7] = dest.DATA8;
+                    transmitMessage(dest.ID, temp_tx_buffer, dest.LENGHT);
+                }
+            }
+            else
+            {
+                uint8_t temp_tx_buffer[8];
+                temp_tx_buffer[0] = dest.DATA1;
+                temp_tx_buffer[1] = dest.DATA2;
+                temp_tx_buffer[2] = dest.DATA3;
+                temp_tx_buffer[3] = dest.DATA4;
+                temp_tx_buffer[4] = dest.DATA5;
+                temp_tx_buffer[5] = dest.DATA6;
+                temp_tx_buffer[6] = dest.DATA7;
+                temp_tx_buffer[7] = dest.DATA8;
+                transmitMessage(dest.ID, temp_tx_buffer, dest.LENGHT);
+                startupDB = 0;
+            }
+            temp_ID_B = 0;
+        }
+        return 1;
+#endif
+    }
+#if !SLAVEMODE
+    else if (BUS_Available_A)
+    {
+
+        if (dest.ID >= 10 && dest.ID <= 120)
+        {
+
+            uint8_t tx_buffer[8] = {};
+
+            transmitMessage(dest.ID, tx_buffer, dest.LENGHT);
+            BUS_Available_A = 0;
+
+            return 0;
+        }
+        else if (dest.ID >= 121 && dest.ID <= 240)
+        {
+
+            uint8_t tx_buffer[8] = {};
+
+            transmitMessage(dest.ID, tx_buffer, dest.LENGHT);
+            BUS_Available_A = 0;
+
+            return 0;
+        }
+        return 2;
+    }
+#endif
+    return 3;
 }
 
+uint8_t write_slave_DB(void *source)
+{
+    struct framesT dest;
+    memcpy(&dest, source, sizeof(struct framesT));
+    if (BUS_Available_B)
+    {
+        if (dest.ID >= 121 && dest.ID <= 240)
+        {
 
+            tx_verify_buffer[0] = dest.DATA1;
+            tx_verify_buffer[1] = dest.DATA2;
+            tx_verify_buffer[2] = dest.DATA3;
+            tx_verify_buffer[3] = dest.DATA4;
+            tx_verify_buffer[4] = dest.DATA5;
+            tx_verify_buffer[5] = dest.DATA6;
+            tx_verify_buffer[6] = dest.DATA7;
+            tx_verify_buffer[7] = 1;
 
+            transmitMessage(dest.ID, tx_verify_buffer, 8);
+            BUS_Available_B = 0;
+            return 1;
+        }
+        return 2;
+    }
+    else if (!BUS_Available_B)
+    {
+        return 0;
+    }
+    return 3;
+}

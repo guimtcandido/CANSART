@@ -1,29 +1,36 @@
-#ifndef CANSART_H
-#define CANSART_H
+#ifndef CANSARTP_H
+#define CANSARTP_H
 
+#include "stdint.h"
 #include "cansart_db.h"
 #include "cansartP.h"
-#include "driver.h"
 
-#define MCU MCU_TYPE
-
-#if MCU == ARDUINO
-#include <Arduino.h>
-#include <HardwareSerial.h>
-
-#elif MCU == STM32
+#if MCU_TYPE == ARDUINO
+#include "HardwareSerial.h"
+#elif MCU_TYPE == STM32
 // To include
-#elif MCU == PIC32
+#elif MCU_TYPE == PIC32
 // To include
-#elif MCU == RENESAS
+#elif MCU_TYPE == RENESAS
 // To include
 #endif
 
-uint8_t transmitMessage(uint8_t ID, uint8_t *txmessageBuffer, uint8_t messageLength);
-void tx_checksum_calculator();
-uint8_t availableMessage(uint8_t *rxmessageBuffer);
-uint8_t rx_checksum_calculator();
-uint8_t convertData(char *receivedData);
-uint8_t receiveUSART(char *buffer);
+struct framesT
+{
+    uint8_t ID = 0;
+    uint8_t DATA1 = 0;
+    uint8_t DATA2 = 0;
+    uint8_t DATA3 = 0;
+    uint8_t DATA4 = 0;
+    uint8_t DATA5 = 0;
+    uint8_t DATA6 = 0;
+    uint8_t DATA7 = 0;
+    uint8_t DATA8 = 0;
+    uint8_t LENGHT = 0;
+};
+
+
+uint8_t updateDB(void *source);
+uint8_t write_slave_DB(void *source);
 
 #endif

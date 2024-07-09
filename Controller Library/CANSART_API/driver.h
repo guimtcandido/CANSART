@@ -1,7 +1,18 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 
-#include"cansart.h"
+#include "stdint.h"
+#include "cansart_db.h"
+
+#if MCU_TYPE == ARDUINO
+#include "HardwareSerial.h"
+#elif MCU_TYPE == STM32
+// To include
+#elif MCU_TYPE == PIC32
+// To include
+#elif MCU_TYPE == RENESAS
+// To include
+#endif
 
 #define ARDUINO 0
 #define STM32 1

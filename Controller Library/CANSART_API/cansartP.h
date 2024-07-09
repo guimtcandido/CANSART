@@ -1,24 +1,29 @@
-#ifndef CANSARTP_H
-#define CANSARTP_H
+#ifndef CANSART_H
+#define CANSART_H
 
-#include "cansart.h"
+#include "cansart_db.h"
+#include "cansartP.h"
+#include "driver.h"
 
-struct framesT
-{
-    uint8_t ID = 0;
-    uint8_t DATA1 = 0;
-    uint8_t DATA2 = 0;
-    uint8_t DATA3 = 0;
-    uint8_t DATA4 = 0;
-    uint8_t DATA5 = 0;
-    uint8_t DATA6 = 0;
-    uint8_t DATA7 = 0;
-    uint8_t DATA8 = 0;
-    uint8_t LENGHT = 0;
-};
+#define MCU MCU_TYPE
 
+#if MCU == ARDUINO
 
-uint8_t updateDB(void *source);
-uint8_t write_slave_DB(void *source);
+#include <Arduino.h>
+
+#elif MCU == STM32
+// To include
+#elif MCU == PIC32
+// To include
+#elif MCU == RENESAS
+// To include
+#endif
+
+uint8_t transmitMessage(uint8_t ID, uint8_t *txmessageBuffer, uint8_t messageLength);
+void tx_checksum_calculator();
+uint8_t availableMessage(uint8_t *rxmessageBuffer);
+uint8_t rx_checksum_calculator();
+uint8_t convertData(char *receivedData);
+uint8_t receiveUSART(char *buffer);
 
 #endif
