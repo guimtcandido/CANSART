@@ -1,10 +1,11 @@
 #include "cansart.h"
 
 extern frame10 frames10;
-
+extern frame121 frames121;
 void cansart_init_Frames()
 {
     frames10.ID = 10;
+    frames121.ID = 121;
 }
 
 /**
