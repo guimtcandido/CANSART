@@ -1,10 +1,5 @@
 #include "driver.h"
 
-//TO ERASE
-#include "stm32f1xx_hal.h"
-#include "usart.h"
-//**** */
-
 #if MCU_TYPE == MY_ARDUINO
 HardwareSerial *Lusart;
 void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate)
@@ -115,7 +110,9 @@ uint8_t getData(uint8_t *pData) {
 #endif
 }
 
+#if MCU_TYPE == STM32
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 
 	uartDone = 1;
 }
+#endif

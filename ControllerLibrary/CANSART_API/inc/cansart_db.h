@@ -11,7 +11,7 @@
  * @param PIC32 
  * @param RENESAS
  */
-#define MCU_TYPE STM32
+#define MCU_TYPE MY_ARDUINO
 
 /**
  * @brief Define the mode of the device - always need a master and a slave on the network

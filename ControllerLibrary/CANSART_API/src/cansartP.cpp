@@ -103,7 +103,7 @@ uint8_t receiveUSART(char *buffer)
   if (newData() > 0)
   {
 
-    buffer[rx_COUNTER] = getData();
+    buffer[rx_COUNTER] = getData((uint8_t*)'\0');
 
     if (buffer[rx_COUNTER] == '\n')
     {
@@ -121,12 +121,13 @@ uint8_t receiveUSART(char *buffer)
 		return 1;
 
 	}
-	return 0;
+	
   #elif MCU_TYPE == PIC32
   // To include
   #elif MCU_TYPE == RENESAS
   // To include
   #endif
+  return 0;
 }
 
 
