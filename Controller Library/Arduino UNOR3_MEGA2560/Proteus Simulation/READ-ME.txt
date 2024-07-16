@@ -1,7 +1,0 @@
-How to use Simulation:
-
-- Make sure you have proteus installed;
-- Load it then go to each arduino, and choose the hex file on the examples folder:  
-
-...\Examples\CANSART__UNO_MASTER\.pio\build\uno\firmware.hex
-...\Examples\CANSART__UNO_SLAVE\.pio\build\uno\firmware.hex

@@ -6,12 +6,12 @@
 /**
  * @brief Define the MCU type
  * 
- * @param ARDUINO
+ * @param MY_ARDUINO
  * @param STM32 
  * @param PIC32 
  * @param RENESAS
  */
-#define MCU_TYPE ARDUINO
+#define MCU_TYPE MY_ARDUINO
 
 /**
  * @brief Define the mode of the device - always need a master and a slave on the network
@@ -23,16 +23,17 @@
 
 struct frame10
 {
-    uint8_t ID = 10;
-    uint8_t DATA1 = 0;
-    uint8_t DATA2 = 0;
-    uint8_t DATA3 = 0;
-    uint8_t DATA4 = 0;
-    uint8_t DATA5 = 0;
-    uint8_t DATA6 = 0;
-    uint8_t DATA7 = 0;
-    uint8_t DATA8 = 0;
-    uint8_t LENGHT = 8;
+    uint8_t ID ;
+    uint8_t DATA1 ;
+    uint8_t DATA2;
+    uint8_t DATA3 ;
+    uint8_t DATA4 ;
+    uint8_t DATA5 ;
+    uint8_t DATA6 ;
+    uint8_t DATA7 ;
+    uint8_t DATA8 ;
+    uint8_t LENGHT ;
 };
+
 
 #endif
