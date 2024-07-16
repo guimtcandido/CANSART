@@ -1,5 +1,29 @@
 #include "cansart.h"
 
+extern frame10 frames10;
+
+void cansart_init_Frames()
+{
+    frames10.ID = 10;
+}
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 #if !SLAVEMODE
 static uint8_t BUS_Available_A = 1;
 static uint8_t temp_ID_C = 0;
@@ -9,12 +33,27 @@ static uint8_t BUS_Available_B = 1;
 static uint8_t rx_buffer[8];
 static uint8_t temp_ID_B = 0;
 
-
 static uint8_t tx_verify_buffer[8];
 
 uint8_t startupDB = 1;
 
-uint8_t updateDB(void *source)
+#if MCU_TYPE == MY_ARDUINO
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate)
+{
+    setCANSART_Driver(serialPort, baudrate);
+}
+#elif MCU_TYPE == STM32
+void cansart_init(UART_HandleTypeDef serialPort, unsigned long baudrate)
+{
+    setCANSART_Driver(serialPort, baudrate);
+}
+#elif MCU_TYPE == PIC32
+// To include
+#elif MCU_TYPE == RENESAS
+// To include
+#endif
+
+uint8_t cansart_updateDB(void *source)
 {
 
     struct framesT dest;
@@ -153,7 +192,7 @@ uint8_t updateDB(void *source)
     return 3;
 }
 
-uint8_t write_slave_DB(void *source)
+uint8_t cansart_write_slave_DB(void *source)
 {
     struct framesT dest;
     memcpy(&dest, source, sizeof(struct framesT));

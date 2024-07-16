@@ -1,21 +1,21 @@
-#ifndef CANSART_H
-#define CANSART_H
+#ifndef CANSARTP_H
+#define CANSARTP_H
 
 #include "cansart_db.h"
 #include "cansartP.h"
+#include "string.h"
+#include "stdlib.h"
 #include "driver.h"
 
-#define MCU MCU_TYPE
-
-#if MCU == ARDUINO
+#if MCU_TYPE == MY_ARDUINO
 
 #include <Arduino.h>
 
-#elif MCU == STM32
+#elif MCU_TYPE == STM32
 // To include
-#elif MCU == PIC32
+#elif MCU_TYPE == PIC32
 // To include
-#elif MCU == RENESAS
+#elif MCU_TYPE == RENESAS
 // To include
 #endif
 
