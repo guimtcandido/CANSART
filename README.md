@@ -10,13 +10,23 @@ MAKE SURE WHEN YOU ARE WORKING WITH TWO MICROCONTROLLERS OU MICROPROCESSORS TO C
 Features:
 - Arduino Compatibility;
 - STM32 Compatibility;
-- PIC32 Compatibility;
 - LabView Compatibility (needs python 3.6 on your machine);
 - Non blocking, (most of the execution does not run on loops) -> This means message transaction between ends wont affect much of your performance, however this is will be more improved.
 - Message IDs, Write/Read only IDs, helps on code reading and organization;
 - One of the best: Multiplatform -> You can design your code for one unit, and if you need to change for any other architecture, you can simply import the library and change the database, it will be fully compatible.
 
+Latest Updates:
 
-Each library has different components due to the different unit architectures.
+v2.0
 
-Each Library has instructions for using, it is easy, follow with attention.
+- One library for all platforms;
+- One Labview Example with read/write operations;
+- Faster read/write operations;
+- No support for PIC32 yet;
+- No support for Renesas yet;
+
+Currently Supported:
+- STM32 MCUs;
+- Most arduino platforms with USART;
+
+Each folder has instructions for use, pay attention to it, it is easy.
