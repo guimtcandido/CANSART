@@ -3,6 +3,8 @@
 #include "cansart.h"
 #include <SoftwareSerial.h> 
 
+#define INPUT_PIN 6
+
 SoftwareSerial mySerial(2, 3); // RX, TX
 
 frame10 frames10;
@@ -23,6 +25,8 @@ void setup()
   cansart_init(Serial, 115200);
   mySerial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(INPUT_PIN, INPUT);
+  mySerial.println("CANSART MASTER");  
 }
 
 void loop()
@@ -48,8 +52,20 @@ void loop()
     mySerial.print(frames10.DATA7);
     mySerial.print(" DATA8: ");
     mySerial.println(frames10.DATA8);
+
+frames121.DATA2++;
+
     oldMillis = millis();
   }
+
+  if(frames121.DATA2 >= 250){
+    frames121.DATA2 = 0;
+  
+  }
+
+frames121.DATA1 = digitalRead(INPUT_PIN);
+
+
 
   cansartTasks();
 }

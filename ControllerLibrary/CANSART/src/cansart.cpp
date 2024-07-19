@@ -28,13 +28,15 @@ void cansart_init_Frames()
 #if !SLAVEMODE
 static uint8_t BUS_Available_A = 1;
 static uint8_t temp_ID_C = 0;
+static uint8_t tx_verify_buffer[8];
+static uint8_t BUS_Available_B = 1;
 #endif
 
-static uint8_t BUS_Available_B = 1;
+
 static uint8_t rx_buffer[8];
 static uint8_t temp_ID_B = 0;
 
-static uint8_t tx_verify_buffer[8];
+
 
 uint8_t startupDB = 1;
 
@@ -180,9 +182,17 @@ uint8_t cansart_updateDB(void *source)
         else if (dest.ID >= 121 && dest.ID <= 240)
         {
 
-            uint8_t tx_buffer[8] = {};
+            tx_verify_buffer[0] = dest.DATA1;
+            tx_verify_buffer[1] = dest.DATA2;
+            tx_verify_buffer[2] = dest.DATA3;
+            tx_verify_buffer[3] = dest.DATA4;
+            tx_verify_buffer[4] = dest.DATA5;
+            tx_verify_buffer[5] = dest.DATA6;
+            tx_verify_buffer[6] = dest.DATA7;
+            tx_verify_buffer[7] = 1;
 
-            transmitMessage(dest.ID, tx_buffer, dest.LENGHT);
+            transmitMessage(dest.ID, tx_verify_buffer, 8);
+            
             BUS_Available_A = 0;
 
             return 0;
@@ -192,7 +202,7 @@ uint8_t cansart_updateDB(void *source)
 #endif
     return 3;
 }
-
+/*
 uint8_t cansart_write_slave_DB(void *source)
 {
     struct framesT dest;
@@ -223,3 +233,4 @@ uint8_t cansart_write_slave_DB(void *source)
     }
     return 3;
 }
+*/
