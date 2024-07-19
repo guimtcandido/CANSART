@@ -1,3 +1,5 @@
+/*LIBRARY VERSION 3.0.0*/
+
 #ifndef CANSART_H
 #define CANSART_H
 
