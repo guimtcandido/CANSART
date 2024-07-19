@@ -19,6 +19,7 @@ static uint16_t checksum = 0;
 uint8_t transmitMessage(uint8_t ID, uint8_t *txmessageBuffer, uint8_t messageLength)
 {
   tx_ID = ID;
+  messageLength = 8; // For now, the message length is fixed to 8 bytes
   tx_LENGHT = messageLength;
 
   for (int i = 0; i < messageLength; i++)

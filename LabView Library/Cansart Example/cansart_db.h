@@ -3,8 +3,6 @@
 
 #include "stdint.h"
 
-#define CANSART_VERSION "3.0.0"
-
 /**
  * @brief Define the MCU type
  * 

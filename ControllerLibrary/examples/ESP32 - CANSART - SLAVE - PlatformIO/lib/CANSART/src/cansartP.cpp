@@ -19,9 +19,9 @@ static uint16_t checksum = 0;
 uint8_t transmitMessage(uint8_t ID, uint8_t *txmessageBuffer, uint8_t messageLength)
 {
   tx_ID = ID;
-  tx_LENGHT = messageLength;
-
-  for (int i = 0; i < messageLength; i++)
+  // tx_LENGHT = messageLength;
+  tx_LENGHT = 8;
+  for (int i = 0; i < tx_LENGHT; i++)
   {
     tx_DATA[i] = txmessageBuffer[i];
   }
@@ -95,15 +95,14 @@ uint8_t rx_checksum_calculator()
   return temp_rx_LENGHT;
 }
 
-
 uint8_t receiveUSART(char *buffer)
 {
-  #if MCU_TYPE == MY_ARDUINO
+#if MCU_TYPE == MY_ARDUINO
 
   if (newData() > 0)
   {
 
-    buffer[rx_COUNTER] = getData((uint8_t*)'\0');
+    buffer[rx_COUNTER] = getData((uint8_t *)'\0');
 
     if (buffer[rx_COUNTER] == '\n')
     {
@@ -112,24 +111,22 @@ uint8_t receiveUSART(char *buffer)
     }
 
     rx_COUNTER++;
-
   }
-  #elif MCU_TYPE == STM32
-  if (newData()) {
+#elif MCU_TYPE == STM32
+  if (newData())
+  {
 
-		getData((uint8_t*)buffer);
-		return 1;
+    getData((uint8_t *)buffer);
+    return 1;
+  }
 
-	}
-	
-  #elif MCU_TYPE == PIC32
-  // To include
-  #elif MCU_TYPE == RENESAS
-  // To include
-  #endif
+#elif MCU_TYPE == PIC32
+// To include
+#elif MCU_TYPE == RENESAS
+// To include
+#endif
   return 0;
 }
-
 
 uint8_t convertData(char *receivedData)
 {
@@ -170,6 +167,3 @@ uint8_t convertData(char *receivedData)
 
   return 1;
 }
-
-
-
