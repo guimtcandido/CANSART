@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "cansart.h"
 
+#define OUTPUT_PIN 5 //SET a pin so you can togle from master
+
 frame10 frames10;
 frame121 frames121;
 
@@ -8,31 +10,37 @@ uint8_t i = 0;
 
 unsigned long oldMillis = 0;
 
-uint8_t temp_LED_SET = 0;
-uint8_t LED_SET = 0;
+uint8_t temp_OUT_SET = 0;
+uint8_t OUT_SET = 0;
 
 void cansartTasks();
 void setup()
 {
 
+  Serial.begin(115200);
+
   cansart_init_Frames();
-  cansart_init(Serial, 115200);
-  pinMode(LED_BUILTIN, OUTPUT);
+  cansart_init(Serial1, 115200,4,2);
+
+  pinMode(OUTPUT_PIN, OUTPUT);
+
+  Serial.println("CANSART SLAVE");
+
 }
 
 void loop()
 {
 
-  if (temp_LED_SET)
+  if (temp_OUT_SET)
   {
-    LED_SET = 1;
+    OUT_SET = 1;
   }
   else
   {
-    LED_SET = 0;
+    OUT_SET = 0;
   }
 
-  digitalWrite(LED_BUILTIN, LED_SET);
+  digitalWrite(OUTPUT_PIN, OUT_SET);
 
   if (millis() - oldMillis > 500)
   {
@@ -56,6 +64,8 @@ void cansartTasks()
   cansart_updateDB(&frames10);
   cansart_updateDB(&frames121);
 
-  temp_LED_SET = frames121.DATA1;
+  temp_OUT_SET = frames121.DATA1;
+
   frames10.DATA1 = frames121.DATA2;
+
 }

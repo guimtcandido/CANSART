@@ -10,7 +10,7 @@ static uint8_t rx_ID = 0;
 static uint8_t rx_LENGHT = 0;
 static uint8_t rx_DATA[8];
 static uint16_t rx_CHECKSUM = 0;
-#if MCU_TYPE == MY_ARDUINO
+#if (MCU_TYPE == C_ARDUINO || MCU_TYPE == C_ESP32)
 static uint8_t rx_COUNTER = 0;
 #endif
 
@@ -99,9 +99,9 @@ uint8_t rx_checksum_calculator()
 
 uint8_t receiveUSART(char *buffer)
 {
-  #if MCU_TYPE == MY_ARDUINO
-
-  if (newData() > 0)
+  #if (MCU_TYPE == C_ARDUINO || MCU_TYPE == C_ESP32)
+  int tempVar = newData();
+  if (tempVar > 0)
   {
 
     buffer[rx_COUNTER] = getData((uint8_t*)'\0');
@@ -115,7 +115,11 @@ uint8_t receiveUSART(char *buffer)
     rx_COUNTER++;
 
   }
-  #elif MCU_TYPE == STM32
+   if ((tempVar <= 0 && (rx_COUNTER != 0)) || (rx_COUNTER >= 48))
+  {
+    rx_COUNTER = 0;
+  }
+  #elif MCU_TYPE == C_STM32
   if (newData()) {
 
 		getData((uint8_t*)buffer);
@@ -123,9 +127,9 @@ uint8_t receiveUSART(char *buffer)
 
 	}
 	
-  #elif MCU_TYPE == PIC32
+  #elif MCU_TYPE == C_PIC32
   // To include
-  #elif MCU_TYPE == RENESAS
+  #elif MCU_TYPE == C_RENESAS
   // To include
   #endif
   return 0;

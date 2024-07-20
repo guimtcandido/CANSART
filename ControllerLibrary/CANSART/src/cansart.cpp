@@ -40,20 +40,25 @@ static uint8_t temp_ID_B = 0;
 
 uint8_t startupDB = 1;
 
-#if MCU_TYPE == MY_ARDUINO
+#if MCU_TYPE == C_ARDUINO
 void cansart_init(HardwareSerial &serialPort, uint32_t baudrate)
 {
     setCANSART_Driver(serialPort, baudrate);
 }
-#elif MCU_TYPE == STM32
+#elif MCU_TYPE == C_STM32
 void cansart_init(UART_HandleTypeDef serialPort, unsigned long baudrate)
 {
     setCANSART_Driver(serialPort, baudrate);
 }
-#elif MCU_TYPE == PIC32
+#elif MCU_TYPE == C_PIC32
 // To include
-#elif MCU_TYPE == RENESAS
+#elif MCU_TYPE == C_RENESAS
 // To include
+#elif MCU_TYPE == C_ESP32
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin)
+{
+    setCANSART_Driver(serialPort, baudrate, rxPin, txPin);
+}
 #endif
 
 uint8_t cansart_updateDB(void *source)
