@@ -1,3 +1,5 @@
+/* The library is hybrid, the slave project can run with a pc as master or a controller as master, no need to change anything except the serial driver if needed*/
+
 #include <Arduino.h>
 #include "cansart.h"
 
@@ -20,7 +22,7 @@ void setup()
   Serial.begin(115200);
 
   cansart_init_Frames();
-  cansart_init(Serial1, 115200,4,2);
+  cansart_init(Serial1, 115200,4,2); //Set Serial Driver, Baudrate, RX pin, TX pin
 
   pinMode(OUTPUT_PIN, OUTPUT);
 
