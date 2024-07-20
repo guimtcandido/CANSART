@@ -6,24 +6,28 @@
 #include "stdio.h"
 #include "cansart_db.h"
 
-#define MY_ARDUINO 0
-#define STM32 1
-#define PIC32 2
-#define RENESAS 3
+#define C_ARDUINO 0
+#define C_STM32 1
+#define C_PIC32 2
+#define C_RENESAS 3
+#define C_ESP32 4
 
-#if MCU_TYPE == MY_ARDUINO
+#if (MCU_TYPE == C_ARDUINO)
 
 #include "HardwareSerial.h"
 void setCANSART_Driver(HardwareSerial &usart,unsigned long baudrate);
 
-#elif MCU_TYPE == STM32
+#elif MCU_TYPE == C_STM32
 #include "stm32f1xx_hal.h"
 #include "usart.h"
 void setCANSART_Driver(UART_HandleTypeDef usart,unsigned long baudrate);
-#elif MCU_TYPE == PIC32
+#elif MCU_TYPE == C_PIC32
 // To include
-#elif MCU_TYPE == RENESAS
+#elif MCU_TYPE == C_RENESAS
 // To include
+#elif MCU_TYPE == C_ESP32
+#include "HardwareSerial.h"
+void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate, uint8_t rxPin, uint8_t txPin);
 #endif
 
 

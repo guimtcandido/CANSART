@@ -7,15 +7,15 @@
 #include "stdlib.h"
 #include "driver.h"
 
-#if MCU_TYPE == MY_ARDUINO
+#if (MCU_TYPE == C_ARDUINO || MCU_TYPE == C_ESP32)
 
 #include <Arduino.h>
 
-#elif MCU_TYPE == STM32
+#elif MCU_TYPE == C_STM32
 // To include
-#elif MCU_TYPE == PIC32
+#elif MCU_TYPE == C_PIC32
 // To include
-#elif MCU_TYPE == RENESAS
+#elif MCU_TYPE == C_RENESAS
 // To include
 #endif
 

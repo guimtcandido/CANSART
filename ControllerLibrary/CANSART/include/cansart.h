@@ -22,14 +22,16 @@ struct framesT
     uint8_t LENGHT;
 };
 
-#if MCU_TYPE == MY_ARDUINO
+#if MCU_TYPE == C_ARDUINO
 void cansart_init(HardwareSerial &serialPort, uint32_t baudrate);
-#elif MCU_TYPE == STM32
+#elif MCU_TYPE == C_STM32
 void cansart_init(UART_HandleTypeDef serialPort,unsigned long baudrate);
-#elif MCU_TYPE == PIC32
+#elif MCU_TYPE == C_PIC32
 // To include
-#elif MCU_TYPE == RENESAS
+#elif MCU_TYPE == C_RENESAS
 // To include
+#elif MCU_TYPE == C_ESP32
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin);
 #endif
 
 void cansart_init_Frames();

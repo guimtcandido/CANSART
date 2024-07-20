@@ -6,12 +6,13 @@
 /**
  * @brief Define the MCU type
  * 
- * @param MY_ARDUINO
- * @param STM32 
- * @param PIC32 
- * @param RENESAS
+ * @param C_ARDUINO
+ * @param C_STM32 
+ * @param C_PIC32 
+ * @param C_RENESAS
+ * @param C_ESP32
  */
-#define MCU_TYPE MY_ARDUINO
+#define MCU_TYPE C_ARDUINO
 
 /**
  * @brief Define the mode of the device - always need a master and a slave on the network
