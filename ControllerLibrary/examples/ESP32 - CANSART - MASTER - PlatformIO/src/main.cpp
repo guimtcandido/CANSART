@@ -21,7 +21,7 @@ void setup()
   Serial.begin(115200);
 
   cansart_init_Frames();
-  cansart_init(Serial1, 115200,4,2);
+  cansart_init(Serial1, 115200,4,2); //Set Serial Driver, Baudrate, RX pin, TX pin
   
   pinMode(INPUT_PIN, INPUT);
 
