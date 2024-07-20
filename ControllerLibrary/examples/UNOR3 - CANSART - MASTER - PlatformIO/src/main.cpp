@@ -1,11 +1,11 @@
 
 #include <Arduino.h>
 #include "cansart.h"
-#include <SoftwareSerial.h> 
+#include <SoftwareSerial.h>
 
 #define INPUT_PIN 6
 
-SoftwareSerial mySerial(2, 3); // RX, TX
+SoftwareSerial mySerial(10, 11); // RX, TX
 
 frame10 frames10;
 frame121 frames121;
@@ -21,12 +21,15 @@ void cansartTasks();
 void setup()
 {
 
+  mySerial.begin(115200);
+
   cansart_init_Frames();
   cansart_init(Serial, 115200);
-  mySerial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
+  
   pinMode(INPUT_PIN, INPUT);
-  mySerial.println("CANSART MASTER");  
+
+  mySerial.println("CANSART MASTER");
+
 }
 
 void loop()
@@ -53,19 +56,17 @@ void loop()
     mySerial.print(" DATA8: ");
     mySerial.println(frames10.DATA8);
 
-frames121.DATA2++;
+    frames121.DATA2++;
 
     oldMillis = millis();
   }
 
-  if(frames121.DATA2 >= 250){
+  if (frames121.DATA2 >= 250)
+  {
     frames121.DATA2 = 0;
-  
   }
 
-frames121.DATA1 = digitalRead(INPUT_PIN);
-
-
+  frames121.DATA1 = digitalRead(INPUT_PIN);
 
   cansartTasks();
 }

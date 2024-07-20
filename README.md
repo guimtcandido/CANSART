@@ -5,10 +5,13 @@ CANSART is a Application Layer for interfacing a Serial Bus (UART).
 
 The use of the library is focused for fast interface between two machines, where you set an Database which will be the same for both ends (MCU-MCU; MCU-PC), this allows you to run an update function and the database will automatically update on both machines.
 
-MAKE SURE WHEN YOU ARE WORKING WITH TWO MICROCONTROLLERS OU MICROPROCESSORS TO CHECK THE SLAVE_MODE ON CANSART_DB.H, YOU HAVE TO CHANGE IT FOR SLAVE AND MASTER.
+CHECK ON CANSART_DB.h:
+- SLAVE MODE
+- CONTROLLER TYPE
 
 Features:
 - Arduino Compatibility;
+- ESP32 Compatibility;
 - STM32 Compatibility;
 - LabView Compatibility (needs python 3.6 on your machine);
 - Non blocking, (most of the execution does not run on loops) -> This means message transaction between ends wont affect much of your performance, however this is will be more improved.
