@@ -26,17 +26,28 @@ Instructions:
     - Most of the time is very straight forward like including the files in your project folder and include it on the main.ino or main.cpp file;
 
 3º - On cansart_db.h you have to:
+
     1º - Set architecture;
+    
     2º - Add your IDs structures like the one that are pre-inserted;
 
+
 4º - On "main.cpp" or "yourfile.cpp" you have to:
+
     1º - ```#include "cansart.h"```;
-    2º - Instanciate your used IDs like ```frame10 frames10```;
+    
+    2º - Instanciate your used IDs like frame10 frames10;
+    
     3º - Call 2 functions on startup:
-        1º - ```cansart_init_Frames();``` Where you will initialize your frames by setting the ID;
-        2º - ```cansart_init(USART Driver,BaudRate);``` Where you can set the driver that you will use and the BaudRate, for some chips you might have a 3rd (RX Pin) and 4th parameter(TX Pin) to set pins (ESP32 for example);
-    4º - On runtime you will call ```cansart_updateDB(&frames10)``` to update the database, be aware that you need to call this funciton for each used ID!; 
+    
+        1º - cansart_init_Frames(); Where you will initialize your frames by setting the ID;
+        
+        2º - cansart_init(USART Driver,BaudRate); Where you can set the driver that you will use and the BaudRate, for some chips you might have a 3rd (RX Pin) and 4th parameter(TX Pin) to set pins (ESP32 for example);
+   
+    4º - On runtime you will call cansart_updateDB(&frames10) to update the database, be aware that you need to call this funciton for each used ID!; 
 
-3º - Check The examples to help you out!
 
-4º - Thanks...!
+5º - Check The examples to help you out!
+
+
+6º - Thanks...!
