@@ -34,8 +34,8 @@ Instructions:
     2º - Instanciate your used IDs like ```frame10 frames10```;
     3º - Call 2 functions on startup:
         1º - ```cansart_init_Frames();``` Where you will initialize your frames by setting the ID;
-        2º - ```cansart_init(USART Driver,BaudRate);``` Where you can set the driver that you will use and the BaudRate;~
-    4º - On runtime you will call ```updateDB(&frames10)``` to update the database, be aware that you need to call this funciton for each used ID!; 
+        2º - ```cansart_init(USART Driver,BaudRate);``` Where you can set the driver that you will use and the BaudRate, for some chips you might have 3rd parameter to set pins (ESP32 for example);
+    4º - On runtime you will call ```cansart_updateDB(&frames10)``` to update the database, be aware that you need to call this funciton for each used ID!; 
 
 3º - Check The examples to help you out!
 
