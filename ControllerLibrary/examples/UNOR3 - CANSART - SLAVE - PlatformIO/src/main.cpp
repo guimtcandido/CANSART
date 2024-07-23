@@ -22,10 +22,10 @@ void cansartTasks();
 void setup()
 {
 
-  Serial.begin(115200);
+  mySerial.begin(115200);
 
   cansart_init_Frames();
-  cansart_init(Serial, 115200); // Set Serial Driver, Baudrate
+  cansart_init(Serial, 115200,millis); //Set Serial Driver, Baudrate, ms Timer function (As it is Arduino, we pass millis())
 
   pinMode(OUTPUT_PIN, OUTPUT);
 

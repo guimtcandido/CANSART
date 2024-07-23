@@ -8,6 +8,8 @@
 #include "cansartP.h"
 #include "driver.h"
 
+#define MASTER_TIMEOUT_MS 500
+
 struct framesT
 {
     uint8_t ID ;
@@ -23,7 +25,7 @@ struct framesT
 };
 
 #if MCU_TYPE == C_ARDUINO
-void cansart_init(HardwareSerial &serialPort, uint32_t baudrate);
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, _vTimer vTimer);
 #elif MCU_TYPE == C_STM32
 void cansart_init(UART_HandleTypeDef serialPort,unsigned long baudrate);
 #elif MCU_TYPE == C_PIC32
@@ -31,7 +33,7 @@ void cansart_init(UART_HandleTypeDef serialPort,unsigned long baudrate);
 #elif MCU_TYPE == C_RENESAS
 // To include
 #elif MCU_TYPE == C_ESP32
-void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin);
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin, _vTimer vTimer);
 #endif
 
 void cansart_init_Frames();
