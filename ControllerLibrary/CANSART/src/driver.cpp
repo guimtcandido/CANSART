@@ -1,12 +1,14 @@
 #include "driver.h"
 
+_vTimer C_vTimer = nullptr;
+
 #if MCU_TYPE == C_ARDUINO
 HardwareSerial *Lusart;
-void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate)
+void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate,_vTimer vTimer)
 {
   Lusart = &usart;
   Lusart->begin(baudrate);
-  // Serial.begin(38400);
+  C_vTimer = vTimer;
 }
 #elif MCU_TYPE == STM32
 
@@ -30,10 +32,11 @@ void setCANSART_Driver(UART_HandleTypeDef usart, unsigned long baudrate) {
 // To include
 #elif MCU_TYPE == C_ESP32
 HardwareSerial *Lusart;
-void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate, uint8_t rxPin, uint8_t txPin)
+void setCANSART_Driver(HardwareSerial &usart, unsigned long baudrate, uint8_t rxPin, uint8_t txPin,_vTimer vTimer)
 {
   Lusart = &usart;
   Lusart->begin(baudrate, SERIAL_8N1, rxPin, txPin);
+  C_vTimer = vTimer;
 }
 #endif
 
@@ -123,3 +126,15 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 	uartDone = 1;
 }
 #endif
+
+unsigned long vTimer()
+{
+    if (C_vTimer != nullptr)
+    {
+        return C_vTimer();  //return time since controller started in ms(milliseconds)
+    }
+    else
+    {
+        return 0;
+    }
+}

@@ -30,7 +30,9 @@ static uint8_t BUS_Available_A = 1;
 static uint8_t temp_ID_C = 0;
 static uint8_t tx_verify_buffer[8];
 static uint8_t BUS_Available_B = 1;
+static unsigned long vTimer_TransmissionBegin = 0;
 #endif
+
 
 
 static uint8_t rx_buffer[8];
@@ -41,9 +43,9 @@ static uint8_t temp_ID_B = 0;
 uint8_t startupDB = 1;
 
 #if MCU_TYPE == C_ARDUINO
-void cansart_init(HardwareSerial &serialPort, uint32_t baudrate)
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate,_vTimer vTimer)
 {
-    setCANSART_Driver(serialPort, baudrate);
+    setCANSART_Driver(serialPort, baudrate, vTimer);
 }
 #elif MCU_TYPE == C_STM32
 void cansart_init(UART_HandleTypeDef serialPort, unsigned long baudrate)
@@ -55,9 +57,10 @@ void cansart_init(UART_HandleTypeDef serialPort, unsigned long baudrate)
 #elif MCU_TYPE == C_RENESAS
 // To include
 #elif MCU_TYPE == C_ESP32
-void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin)
+void cansart_init(HardwareSerial &serialPort, uint32_t baudrate, uint8_t rxPin, uint8_t txPin, _vTimer vTimer)
 {
-    setCANSART_Driver(serialPort, baudrate, rxPin, txPin);
+    setCANSART_Driver(serialPort, baudrate, rxPin, txPin, vTimer);
+    
 }
 #endif
 
@@ -181,7 +184,7 @@ uint8_t cansart_updateDB(void *source)
 
             transmitMessage(dest.ID, tx_buffer, dest.LENGHT);
             BUS_Available_A = 0;
-
+            vTimer_TransmissionBegin = vTimer();
             return 0;
         }
         else if (dest.ID >= 121 && dest.ID <= 240)
@@ -199,13 +202,19 @@ uint8_t cansart_updateDB(void *source)
             transmitMessage(dest.ID, tx_verify_buffer, 8);
             
             BUS_Available_A = 0;
-
+vTimer_TransmissionBegin = vTimer();
             return 0;
         }
         return 2;
     }
+       if (vTimer() - vTimer_TransmissionBegin > MASTER_TIMEOUT_MS)
+    {
+        BUS_Available_A = 1;
+        return 3;
+    }
 #endif
-    return 3;
+ 
+    return 4;
 }
 /*
 uint8_t cansart_write_slave_DB(void *source)

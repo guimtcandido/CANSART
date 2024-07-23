@@ -24,7 +24,7 @@ void setup()
   mySerial.begin(115200);
 
   cansart_init_Frames();
-  cansart_init(Serial, 115200);
+  cansart_init(Serial, 115200,millis); //Set Serial Driver, Baudrate, ms Timer function (As it is Arduino, we pass millis())
   
   pinMode(INPUT_PIN, INPUT);
 
@@ -57,7 +57,7 @@ void loop()
     mySerial.println(frames10.DATA8);
 
     frames121.DATA2++;
-
+//Serial.print("OAL");
     oldMillis = millis();
   }
 
@@ -73,6 +73,7 @@ void loop()
 
 void cansartTasks()
 {
+  
   cansart_updateDB(&frames10);
   cansart_updateDB(&frames121);
 }
